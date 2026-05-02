@@ -35,6 +35,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    env:
+      BOARD: ${{ github.event_name == 'workflow_dispatch' && inputs.board || 'apb' }}
+      TARGET_SET: ${{ github.event_name == 'workflow_dispatch' && inputs.target_set || 'openhd-stack' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -56,28 +59,28 @@ jobs:
       - name: Restore downloads cache
         uses: actions/cache@v4
         with:
-          path: build/${{ inputs.board }}/downloads
-          key: ${{ runner.os }}-downloads-${{ inputs.board }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**', 'scripts/**') }}
+          path: build/${{ env.BOARD }}/downloads
+          key: ${{ runner.os }}-downloads-${{ env.BOARD }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**', 'scripts/**') }}
           restore-keys: |
-            ${{ runner.os }}-downloads-${{ inputs.board }}-
+            ${{ runner.os }}-downloads-${{ env.BOARD }}-
 
       - name: Restore sstate cache
         uses: actions/cache@v4
         with:
-          path: build/${{ inputs.board }}/sstate-cache
-          key: ${{ runner.os }}-sstate-${{ inputs.board }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**') }}
+          path: build/${{ env.BOARD }}/sstate-cache
+          key: ${{ runner.os }}-sstate-${{ env.BOARD }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**') }}
           restore-keys: |
-            ${{ runner.os }}-sstate-${{ inputs.board }}-
+            ${{ runner.os }}-sstate-${{ env.BOARD }}-
 
       - name: Build package artifacts
-        run: ./scripts/build-targets.sh "${{ inputs.board }}" "${{ inputs.target_set }}"
+        run: ./scripts/build-targets.sh "${{ env.BOARD }}" "${{ env.TARGET_SET }}"
 
       - name: Collect artifacts
-        run: ./scripts/collect-artifacts.sh "${{ inputs.board }}"
+        run: ./scripts/collect-artifacts.sh "${{ env.BOARD }}"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: orqa-${{ inputs.board }}-${{ inputs.target_set }}-deb-packages
-          path: artifacts/${{ inputs.board }}/
+          name: orqa-${{ env.BOARD }}-${{ env.TARGET_SET }}-deb-packages
+          path: artifacts/${{ env.BOARD }}/
           if-no-files-found: error
