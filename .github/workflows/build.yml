@@ -1,6 +1,15 @@
 name: Build Yocto Deb Packages
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build.yml"
+      - "kas/**"
+      - "meta-orqa-builder/**"
+      - "scripts/**"
+      - "README.md"
   workflow_dispatch:
     inputs:
       board:
