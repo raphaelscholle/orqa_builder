@@ -1,0 +1,158 @@
+header:
+  version: 20
+
+distro: orqa-os-public
+
+repos:
+  poky:
+    url: https://git.yoctoproject.org/git/poky
+    branch: scarthgap
+    commit: 553530a8acce3b078473c0fa512246a3e84d46bf
+    path: repos/poky
+    layers:
+      meta:
+      meta-poky:
+
+  meta-openembedded:
+    url: https://github.com/openembedded/meta-openembedded.git
+    branch: scarthgap
+    commit: f1f248262d662315159ee96c604f97415d1dbe6a
+    path: repos/meta-openembedded
+    layers:
+      meta-oe:
+      meta-multimedia:
+      meta-python:
+      meta-networking:
+      meta-filesystems:
+
+  meta-freescale:
+    url: https://github.com/Freescale/meta-freescale.git
+    branch: scarthgap
+    commit: 7d83a350d8b28498321a481a2a1c51bb4afb48e9
+    path: repos/meta-freescale
+    layers:
+      .:
+
+  meta-freescale-distro:
+    url: https://github.com/Freescale/meta-freescale-distro.git
+    branch: scarthgap
+    commit: b9d6a5d9931922558046d230c1f5f4ef6ee72345
+    path: repos/meta-freescale-distro
+    layers:
+      .:
+
+  meta-freescale-3rdparty:
+    url: https://github.com/Freescale/meta-freescale-3rdparty.git
+    branch: scarthgap
+    commit: 70c83e96c7f75e73245cb77f1b0cada9ed4bbc6d
+    path: repos/meta-freescale-3rdparty
+    layers:
+      .:
+
+  meta-imx:
+    url: https://github.com/nxp-imx/meta-imx.git
+    branch: scarthgap-6.6.52-2.2.1
+    commit: e83d4402acde050d2b2761995761c81c797b5b03
+    path: repos/meta-imx
+    layers:
+      meta-imx-ml:
+
+  meta-arm:
+    url: https://git.yoctoproject.org/meta-arm
+    branch: scarthgap
+    commit: 950a4afce46a359def2958bd9ae33fc08ff9bb0d
+    path: repos/meta-arm
+    layers:
+      meta-arm:
+      meta-arm-toolchain:
+
+  meta-clang:
+    url: https://github.com/kraj/meta-clang.git
+    branch: scarthgap
+    commit: 731488911f55ebfe746068512b426351192f82f2
+    path: repos/meta-clang
+    layers:
+      .:
+
+  meta-security:
+    url: https://git.yoctoproject.org/meta-security
+    branch: scarthgap
+    commit: 459d837338ca230254baa2994f870bf6eb9d0139
+    path: repos/meta-security
+    layers:
+      meta-parsec:
+      meta-tpm:
+
+  meta-virtualization:
+    url: https://git.yoctoproject.org/meta-virtualization
+    branch: scarthgap
+    commit: 6f3c1d8f90947408a6587be222fec575a1ca5195
+    path: repos/meta-virtualization
+    layers:
+      .:
+
+  meta-lts-mixin-go:
+    url: https://git.yoctoproject.org/meta-lts-mixins
+    branch: scarthgap/go
+    commit: ce36f9ff2b1c7d61ade075d0774a133f125976ad
+    path: repos/meta-lts-mixin-go
+    layers:
+      .:
+
+  meta-lts-mixin-rust:
+    url: https://git.yoctoproject.org/meta-lts-mixins
+    branch: scarthgap/rust
+    commit: 00c30d00f7377ee426b017bb46dd8c4c7eeea03b
+    path: repos/meta-lts-mixin-rust
+    layers:
+      .:
+
+  meta-openhd:
+    url: https://github.com/OpenHD/meta-openhd.git
+    branch: main
+    commit: ffcadd86cc0e757d629d264181699093252a3b99
+    path: repos/meta-openhd
+    layers:
+      .:
+
+  meta-qt5:
+    url: https://github.com/meta-qt5/meta-qt5.git
+    branch: scarthgap
+    commit: 227cf5e7b64c93dfc1a45f235c466db8c3fd8707
+    path: repos/meta-qt5
+    layers:
+      .:
+
+  meta-orqa:
+    url: https://bitbucket.org/orqa-public/meta-orqa-dtk-bsp.git
+    branch: scarthgap-6.6.52_2.2.1
+    commit: e25e17838fe3c2e84635cf90eab27e8515c6a07d
+    path: repos/meta-orqa
+    layers:
+      meta-orqa-dtk-bsp:
+      meta-orqa-distro:
+      meta-orqa-lts-mixins:
+
+  meta-orqa-builder:
+    path: meta-orqa-builder
+    layers:
+      .:
+
+local_conf_header:
+  builder-standard: |
+    CONF_VERSION = "2"
+    BB_SRCREV_POLICY = "latest"
+    PACKAGE_CLASSES = "package_deb"
+    DL_DIR = "${TOPDIR}/../downloads"
+    SSTATE_DIR = "${TOPDIR}/../sstate-cache"
+    PATCHRESOLVE = "noop"
+    ACCEPT_FSL_EULA = "1"
+    LICENSE_FLAGS_ACCEPTED += " commercial"
+  builder-parallel: |
+    BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
+    PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
+
+bblayers_conf_header:
+  base: |
+    POKY_BBLAYERS_CONF_VERSION = "2"
+

@@ -1,0 +1,16 @@
+.cache/
+artifacts/
+build/
+repos/
+downloads/
+sstate-cache/
+tmp/
+*.log
+*.wic
+*.sdimg
+*.rootfs.*
+*.tar
+*.tar.*
+*.zip
+*.deb
+

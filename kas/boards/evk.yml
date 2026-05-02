@@ -1,0 +1,7 @@
+header:
+  version: 20
+  includes:
+    - ../include/orqa-base.yml
+
+machine: orqa-imx8mp-dtk-evk
+

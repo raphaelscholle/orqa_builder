@@ -1,0 +1,74 @@
+name: Build Yocto Deb Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      board:
+        description: ORQA board
+        required: true
+        default: apb
+        type: choice
+        options:
+          - apb
+          - avp
+          - evk
+          - standalone
+      target_set:
+        description: Which package group to build
+        required: true
+        default: openhd-stack
+        type: choice
+        options:
+          - openhd-stack
+          - kernel
+          - all
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc || true
+          docker system prune -af || true
+          df -h
+
+      - name: Install host dependencies
+        run: ./scripts/install-host-deps.sh
+
+      - name: Install kas
+        run: |
+          python3 -m pip install --user kas
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Restore downloads cache
+        uses: actions/cache@v4
+        with:
+          path: build/${{ inputs.board }}/downloads
+          key: ${{ runner.os }}-downloads-${{ inputs.board }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**', 'scripts/**') }}
+          restore-keys: |
+            ${{ runner.os }}-downloads-${{ inputs.board }}-
+
+      - name: Restore sstate cache
+        uses: actions/cache@v4
+        with:
+          path: build/${{ inputs.board }}/sstate-cache
+          key: ${{ runner.os }}-sstate-${{ inputs.board }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**') }}
+          restore-keys: |
+            ${{ runner.os }}-sstate-${{ inputs.board }}-
+
+      - name: Build package artifacts
+        run: ./scripts/build-targets.sh "${{ inputs.board }}" "${{ inputs.target_set }}"
+
+      - name: Collect artifacts
+        run: ./scripts/collect-artifacts.sh "${{ inputs.board }}"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: orqa-${{ inputs.board }}-${{ inputs.target_set }}-deb-packages
+          path: artifacts/${{ inputs.board }}/
+          if-no-files-found: error
