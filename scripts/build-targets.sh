@@ -51,6 +51,11 @@ fi
 export KAS_WORK_DIR="${ROOT_DIR}/build/${BOARD}"
 mkdir -p "${KAS_WORK_DIR}"
 
+# kas resolves local non-VCS repo paths relative to the active work tree.
+# Stage the overlay layer into that work tree so bblayers can resolve it.
+rm -rf "${KAS_WORK_DIR}/meta-orqa-builder"
+rsync -a "${ROOT_DIR}/meta-orqa-builder/" "${KAS_WORK_DIR}/meta-orqa-builder/"
+
 BITBAKE_CMD="bitbake ${TARGETS[*]} -c package_write_deb"
 
 echo "Board: ${BOARD}"
