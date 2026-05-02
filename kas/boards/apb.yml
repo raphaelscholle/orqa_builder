@@ -1,7 +1,6 @@
 header:
-  version: 20
+  version: 18
   includes:
     - ../include/orqa-base.yml
 
 machine: orqa-imx8mp-dtk-apb
-

@@ -1,5 +1,5 @@
 header:
-  version: 20
+  version: 18
 
 distro: orqa-os-public
 
@@ -155,4 +155,3 @@ local_conf_header:
 bblayers_conf_header:
   base: |
     POKY_BBLAYERS_CONF_VERSION = "2"
-
