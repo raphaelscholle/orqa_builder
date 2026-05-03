@@ -25,9 +25,10 @@ on:
       target_set:
         description: Which package group to build
         required: true
-        default: openhd-stack
+        default: openhd-runtime
         type: choice
         options:
+          - openhd-runtime
           - openhd-stack
           - kernel
           - all
@@ -40,7 +41,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       BOARD: ${{ github.event_name == 'workflow_dispatch' && inputs.board || 'standalone' }}
-      TARGET_SET: ${{ github.event_name == 'workflow_dispatch' && inputs.target_set || 'openhd-stack' }}
+      TARGET_SET: ${{ github.event_name == 'workflow_dispatch' && inputs.target_set || 'openhd-runtime' }}
 
     steps:
       - uses: actions/checkout@v4

@@ -16,9 +16,10 @@ on:
       target_set:
         description: Which package group to build into the seed
         required: true
-        default: openhd-stack
+        default: openhd-runtime
         type: choice
         options:
+          - openhd-runtime
           - openhd-stack
           - kernel
           - all

@@ -51,10 +51,10 @@ Install host dependencies:
 python3 -m pip install --user kas
 ```
 
-Build package artifacts for Standalone:
+Build OpenHD runtime packages for Standalone:
 
 ```bash
-./scripts/build-targets.sh standalone openhd-stack
+./scripts/build-targets.sh standalone openhd-runtime
 ```
 
 Build kernel packages only:
@@ -90,6 +90,7 @@ artifacts/standalone/
 
 ## Build Targets
 
+- `openhd-runtime` -> `openhd openhd-sys-utils`
 - `openhd-stack` -> `openhd qopenhd openhd-sys-utils`
 - `kernel` -> `linux-imx`
 - `all` -> `openhd qopenhd openhd-sys-utils linux-imx`

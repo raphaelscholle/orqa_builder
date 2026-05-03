@@ -21,6 +21,9 @@ if [[ ! -f "${KAS_FILE}" ]]; then
 fi
 
 case "${TARGET_SET}" in
+  openhd-runtime)
+    TARGETS=(openhd openhd-sys-utils)
+    ;;
   openhd-stack)
     TARGETS=(openhd qopenhd openhd-sys-utils)
     ;;
@@ -57,12 +60,15 @@ rm -rf "${KAS_WORK_DIR}/meta-orqa-builder"
 rsync -a "${ROOT_DIR}/meta-orqa-builder/" "${KAS_WORK_DIR}/meta-orqa-builder/"
 
 BITBAKE_CMD="bitbake ${TARGETS[*]} -c package_write_deb"
+FETCH_CMD="bitbake ${TARGETS[*]} -c fetch"
 
 echo "Board: ${BOARD}"
 echo "KAS file: ${KAS_FILE}"
 echo "Work dir: ${KAS_WORK_DIR}"
+echo "Fetch command: ${FETCH_CMD}"
 echo "Command: ${BITBAKE_CMD}"
 
+kas shell "${KAS_FILE}" -c "${FETCH_CMD}"
 kas shell "${KAS_FILE}" -c "${BITBAKE_CMD}"
 
 if [[ "${TARGET_SET}" != "kernel" ]]; then

@@ -18,7 +18,7 @@ if [[ -z "${OPENHD_SHA}" || -z "${QOPENHD_SHA}" || -z "${SYSUTILS_SHA}" ]]; then
   exit 1
 fi
 
-sed -i "s/^SRCREV = \".*\"$/SRCREV = \"${OPENHD_SHA}\"/" \
+sed -i "s/^SRCREV_openhd = \".*\"$/SRCREV_openhd = \"${OPENHD_SHA}\"/" \
   "${ROOT_DIR}/meta-orqa-builder/recipes-openhd/openhd/openhd_git.bbappend"
 sed -i "s/^SRCREV = \".*\"$/SRCREV = \"${QOPENHD_SHA}\"/" \
   "${ROOT_DIR}/meta-orqa-builder/recipes-openhd/qopenhd/qopenhd_git.bbappend"
@@ -27,4 +27,3 @@ sed -i "s/^SRCREV = \".*\"$/SRCREV = \"${SYSUTILS_SHA}\"/" \
 
 printf 'openhd=%s\nqopenhd=%s\nopenhd_sysutils=%s\n' \
   "${OPENHD_SHA}" "${QOPENHD_SHA}" "${SYSUTILS_SHA}"
-
