@@ -1,0 +1,73 @@
+name: Refresh Cache Seed
+
+on:
+  workflow_dispatch:
+    inputs:
+      board:
+        description: ORQA board
+        required: true
+        default: apb
+        type: choice
+        options:
+          - apb
+          - avp
+          - evk
+          - standalone
+      target_set:
+        description: Which package group to build into the seed
+        required: true
+        default: openhd-stack
+        type: choice
+        options:
+          - openhd-stack
+          - kernel
+          - all
+
+permissions:
+  contents: write
+
+jobs:
+  seed:
+    runs-on: ubuntu-22.04
+    env:
+      BOARD: ${{ inputs.board }}
+      TARGET_SET: ${{ inputs.target_set }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc || true
+          docker system prune -af || true
+          df -h
+
+      - name: Install host dependencies
+        run: ./scripts/install-host-deps.sh
+
+      - name: Install kas
+        run: |
+          python3 -m pip install --user kas
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Resolve OpenHD revisions
+        run: ./scripts/resolve-openhd-revisions.sh
+
+      - name: Build package artifacts
+        run: ./scripts/build-targets.sh "${{ env.BOARD }}" "${{ env.TARGET_SET }}"
+
+      - name: Create cache seed bundles
+        if: ${{ always() }}
+        run: ./scripts/create-cache-seed.sh "${{ env.BOARD }}"
+
+      - name: Publish cache seed release
+        if: ${{ always() }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: cache-seed-${{ env.BOARD }}
+          name: Cache seed ${{ env.BOARD }}
+          prerelease: true
+          make_latest: false
+          files: |
+            cache-seed/${{ env.BOARD }}/*
+

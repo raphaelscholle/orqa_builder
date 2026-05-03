@@ -4,7 +4,7 @@ LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://inc/sysutil_debug.h;beginline=1;endline=21;md5=cc659a5f9c4e00330d0f09b939df1415"
 
 SRC_URI = "git://github.com/OpenHD/OpenHD-SysUtils.git;protocol=https;branch=main"
-SRCREV = "17e524e85388dfafaeb5d53b2cad6d3c41f46b60"
+SRCREV = "OPENHD_SYSUTILS_SRCREV_PLACEHOLDER"
 
 PV = "main+git${SRCPV}"
 S = "${WORKDIR}/git"

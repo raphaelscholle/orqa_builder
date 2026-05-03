@@ -32,6 +32,9 @@ on:
           - kernel
           - all
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -55,6 +58,14 @@ jobs:
         run: |
           python3 -m pip install --user kas
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Resolve OpenHD revisions
+        run: ./scripts/resolve-openhd-revisions.sh
+
+      - name: Restore cache seed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/download-cache-seed.sh "${{ env.BOARD }}"
 
       - name: Restore downloads cache
         id: cache-downloads-restore
