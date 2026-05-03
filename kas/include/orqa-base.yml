@@ -148,6 +148,21 @@ local_conf_header:
     PATCHRESOLVE = "noop"
     ACCEPT_FSL_EULA = "1"
     LICENSE_FLAGS_ACCEPTED += " commercial"
+  builder-gstreamer: |
+    # Keep the package-only CI builder on NXP's coherent 1.24.x GStreamer stack.
+    # meta-orqa currently ships partial 1.26 overrides that pull in mismatched
+    # plugin recipes against a 1.24 core and break unrelated OpenHD package builds.
+    PREFERRED_VERSION_gstreamer1.0:mx8-nxp-bsp = "1.24.7.imx%"
+    PREFERRED_VERSION_gstreamer1.0-plugins-base:mx8-nxp-bsp = "1.24.7.imx%"
+    PREFERRED_VERSION_gstreamer1.0-plugins-good:mx8-nxp-bsp = "1.24.7.imx%"
+    PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx8-nxp-bsp = "1.24.7.imx%"
+    PREFERRED_VERSION_gstreamer1.0-libav:mx8-nxp-bsp = "1.24.7.imx%"
+    PREFERRED_VERSION_gstreamer1.0-plugins-ugly:mx8-nxp-bsp = "1.24.7.imx%"
+    PREFERRED_VERSION_gstreamer1.0-python:mx8-nxp-bsp = "1.24.0.imx%"
+    PREFERRED_VERSION_gstreamer1.0-rtsp-server:mx8-nxp-bsp = "1.24.0.imx%"
+    PREFERRED_VERSION_gstreamer1.0-vaapi:mx8-nxp-bsp = "1.24.0.imx%"
+    BBMASK += "repos/meta-orqa/meta-orqa-distro/recipes-multimedia/gstreamer/.*_1\\.26\\.0\\.imx\\.bb"
+    BBMASK += "repos/meta-orqa/meta-orqa-distro/recipes-multimedia/gstreamer/.*_1\\.26\\.0\\.imx\\.bbappend"
   builder-parallel: |
     BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
     PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"

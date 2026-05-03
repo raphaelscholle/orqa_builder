@@ -10,7 +10,7 @@ shift "$(( $# > 0 ? 1 : 0 ))" || true
 shift "$(( $# > 0 ? 1 : 0 ))" || true
 
 if [[ -z "${BOARD}" ]]; then
-  echo "Usage: $0 <apb|avp|evk|standalone> <openhd-stack|kernel|all|custom> [custom recipe names...]"
+  echo "Usage: $0 <apb|avp|evk|standalone> <openhd-runtime|openhd-stack|kernel|all|custom> [custom recipe names...]"
   exit 1
 fi
 
