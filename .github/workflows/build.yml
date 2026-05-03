@@ -15,7 +15,7 @@ on:
       board:
         description: ORQA board
         required: true
-        default: apb
+        default: standalone
         type: choice
         options:
           - apb
@@ -39,7 +39,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     env:
-      BOARD: ${{ github.event_name == 'workflow_dispatch' && inputs.board || 'apb' }}
+      BOARD: ${{ github.event_name == 'workflow_dispatch' && inputs.board || 'standalone' }}
       TARGET_SET: ${{ github.event_name == 'workflow_dispatch' && inputs.target_set || 'openhd-stack' }}
 
     steps:

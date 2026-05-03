@@ -51,34 +51,34 @@ Install host dependencies:
 python3 -m pip install --user kas
 ```
 
-Build package artifacts for APB:
+Build package artifacts for Standalone:
 
 ```bash
-./scripts/build-targets.sh apb openhd-stack
+./scripts/build-targets.sh standalone openhd-stack
 ```
 
 Build kernel packages only:
 
 ```bash
-./scripts/build-targets.sh apb kernel
+./scripts/build-targets.sh standalone kernel
 ```
 
 Build both:
 
 ```bash
-./scripts/build-targets.sh apb all
+./scripts/build-targets.sh standalone all
 ```
 
 Collect artifacts:
 
 ```bash
-./scripts/collect-artifacts.sh apb
+./scripts/collect-artifacts.sh standalone
 ```
 
 Collected artifacts end up in:
 
 ```text
-artifacts/apb/
+artifacts/standalone/
 ```
 
 ## Supported Boards
@@ -109,4 +109,3 @@ Practical expectations:
 ## Repository Size
 
 This repo contains only text files and small scripts. Large files are excluded through `.gitignore`.
-

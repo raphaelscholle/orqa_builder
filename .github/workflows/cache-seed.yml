@@ -6,7 +6,7 @@ on:
       board:
         description: ORQA board
         required: true
-        default: apb
+        default: standalone
         type: choice
         options:
           - apb
@@ -70,4 +70,3 @@ jobs:
           make_latest: false
           files: |
             cache-seed/${{ env.BOARD }}/*
-
