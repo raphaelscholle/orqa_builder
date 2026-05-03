@@ -1,0 +1,61 @@
+name: Build SDK Bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      board:
+        description: ORQA board
+        required: true
+        default: standalone
+        type: choice
+        options:
+          - apb
+          - avp
+          - evk
+          - standalone
+
+permissions:
+  contents: write
+
+jobs:
+  sdk:
+    runs-on: ubuntu-22.04
+    env:
+      BOARD: ${{ inputs.board }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc || true
+          docker system prune -af || true
+          df -h
+
+      - name: Install host dependencies
+        run: ./scripts/install-host-deps.sh
+
+      - name: Install kas
+        run: |
+          python3 -m pip install --user kas
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Resolve OpenHD revisions
+        run: ./scripts/resolve-openhd-revisions.sh
+
+      - name: Build SDK
+        run: ./scripts/build-sdk.sh "${{ env.BOARD }}"
+
+      - name: Create SDK bundle
+        run: ./scripts/create-sdk-archive.sh "${{ env.BOARD }}"
+
+      - name: Publish SDK bundle release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: sdk-bundle-${{ env.BOARD }}
+          name: SDK bundle ${{ env.BOARD }}
+          prerelease: true
+          make_latest: false
+          files: |
+            sdk-bundles/${{ env.BOARD }}/*
+

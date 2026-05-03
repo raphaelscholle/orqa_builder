@@ -16,6 +16,8 @@ It fetches the actual Yocto sources at build time through `kas`, then builds onl
 
 The output is `.deb` packages from Yocto, not a full flashable image.
 
+This repo can also produce a reusable Yocto SDK bundle for direct cross-build CI.
+
 ## What This Repo Does
 
 - pins the ORQA Yocto layer stack through `kas`
@@ -95,6 +97,38 @@ artifacts/standalone/
 - `kernel` -> `linux-imx`
 - `all` -> `openhd qopenhd openhd-sys-utils linux-imx`
 - `custom <recipes...>` -> pass explicit BitBake recipe names
+
+## SDK Bundle
+
+You can create a reusable SDK archive once, upload it to your own server, and let fast CI jobs pull it later.
+
+Build the SDK:
+
+```bash
+./scripts/build-sdk.sh standalone
+```
+
+Package the SDK into split sub-100 MB parts:
+
+```bash
+./scripts/create-sdk-archive.sh standalone
+```
+
+This creates:
+
+```text
+sdk-bundles/standalone/sdk-bundle.tar.zst.part-*
+sdk-bundles/standalone/sdk-manifest.txt
+```
+
+To unpack later:
+
+```bash
+./scripts/consume-sdk-archive.sh sdk-bundles/standalone /tmp/orqa-sdk
+```
+
+There is also a workflow to build and publish this bundle as GitHub release assets:
+- `Build SDK Bundle`
 
 ## CI Notes
 
