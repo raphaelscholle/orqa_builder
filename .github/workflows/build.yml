@@ -57,18 +57,20 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Restore downloads cache
-        uses: actions/cache@v4
+        id: cache-downloads-restore
+        uses: actions/cache/restore@v4
         with:
           path: build/${{ env.BOARD }}/downloads
-          key: ${{ runner.os }}-downloads-${{ env.BOARD }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**', 'scripts/**') }}
+          key: ${{ runner.os }}-downloads-${{ env.BOARD }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-downloads-${{ env.BOARD }}-
 
       - name: Restore sstate cache
-        uses: actions/cache@v4
+        id: cache-sstate-restore
+        uses: actions/cache/restore@v4
         with:
           path: build/${{ env.BOARD }}/sstate-cache
-          key: ${{ runner.os }}-sstate-${{ env.BOARD }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/**') }}
+          key: ${{ runner.os }}-sstate-${{ env.BOARD }}-${{ hashFiles('kas/**/*.yml', 'meta-orqa-builder/conf/**', 'meta-orqa-builder/recipes-openhd/**') }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-sstate-${{ env.BOARD }}-
 
@@ -84,3 +86,17 @@ jobs:
           name: orqa-${{ env.BOARD }}-${{ env.TARGET_SET }}-deb-packages
           path: artifacts/${{ env.BOARD }}/
           if-no-files-found: error
+
+      - name: Save downloads cache
+        if: ${{ always() && steps.cache-downloads-restore.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: build/${{ env.BOARD }}/downloads
+          key: ${{ steps.cache-downloads-restore.outputs.cache-primary-key }}
+
+      - name: Save sstate cache
+        if: ${{ always() && steps.cache-sstate-restore.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: build/${{ env.BOARD }}/sstate-cache
+          key: ${{ steps.cache-sstate-restore.outputs.cache-primary-key }}

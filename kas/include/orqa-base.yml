@@ -141,7 +141,7 @@ repos:
 local_conf_header:
   builder-standard: |
     CONF_VERSION = "2"
-    BB_SRCREV_POLICY = "clear"
+    BB_SRCREV_POLICY = "cache"
     PACKAGE_CLASSES = "package_deb"
     DL_DIR = "${TOPDIR}/../downloads"
     SSTATE_DIR = "${TOPDIR}/../sstate-cache"
