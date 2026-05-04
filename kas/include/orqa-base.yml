@@ -161,8 +161,7 @@ local_conf_header:
     PREFERRED_VERSION_gstreamer1.0-python:mx8-nxp-bsp = "1.24.0.imx%"
     PREFERRED_VERSION_gstreamer1.0-rtsp-server:mx8-nxp-bsp = "1.24.0.imx%"
     PREFERRED_VERSION_gstreamer1.0-vaapi:mx8-nxp-bsp = "1.24.0.imx%"
-    BBMASK += "repos/meta-orqa/meta-orqa-distro/recipes-multimedia/gstreamer/.*_1\\.26\\.0\\.imx\\.bb"
-    BBMASK += "repos/meta-orqa/meta-orqa-distro/recipes-multimedia/gstreamer/.*_1\\.26\\.0\\.imx\\.bbappend"
+    BBMASK .= "|.*/repos/meta-orqa/meta-orqa-distro/recipes-multimedia/gstreamer/.*_1\\.26\\.0\\.imx\\.bb(|append)$"
   builder-parallel: |
     BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
     PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
