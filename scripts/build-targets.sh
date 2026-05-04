@@ -54,6 +54,16 @@ fi
 export KAS_WORK_DIR="${ROOT_DIR}/build/${BOARD}"
 mkdir -p "${KAS_WORK_DIR}"
 
+# Keep source/download/sstate reuse, but force BitBake to regenerate config and
+# metadata decisions on every CI run. Otherwise stale local.conf/cache can keep
+# scheduling recipes that newer builder settings mask out.
+rm -rf \
+  "${KAS_WORK_DIR}/build/conf" \
+  "${KAS_WORK_DIR}/build/cache" \
+  "${KAS_WORK_DIR}/build/bitbake-cookerdaemon.log" \
+  "${KAS_WORK_DIR}/build/hashserve.sock" \
+  "${KAS_WORK_DIR}/build/tmp/cache"
+
 # kas resolves local non-VCS repo paths relative to the active work tree.
 # Stage the overlay layer into that work tree so bblayers can resolve it.
 rm -rf "${KAS_WORK_DIR}/meta-orqa-builder"
